@@ -1,4 +1,3 @@
-# frozen_string_literal: true
 module Year2023
   class Day07 < Solution
     def getHandRank(hand, jokersWild = false)
