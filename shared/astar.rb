@@ -9,7 +9,8 @@ class PriorityQueue
     attr_accessor :value, :priority
 
     def initialize(value, priority)
-      @value, @priority = value, priority
+      @value = value
+      @priority = priority
     end
 
     def <=>(other)
@@ -47,6 +48,7 @@ class PriorityQueue
     exchange(1, @elements.size - 1)
     element = @elements.pop.tap { bubble_down(1) }
     return element.value if element.is_a? Element
+
     element
   end
 
@@ -56,6 +58,7 @@ class PriorityQueue
     parent_index = index / 2
     return if index <= 1
     return if @elements[parent_index] <= @elements[index]
+
     exchange(index, parent_index)
     bubble_up(parent_index)
   end
@@ -64,11 +67,13 @@ class PriorityQueue
     child_index = index * 2
     max_index = @elements.size - 1
     return if child_index > max_index
+
     not_last_element = child_index < max_index
     left_element = @elements[child_index]
     right_element = @elements[child_index + 1]
     child_index += 1 if not_last_element && right_element < left_element
     return if @elements[index] <= @elements[child_index]
+
     exchange(index, child_index)
     bubble_down(child_index)
   end
@@ -102,14 +107,15 @@ module AStar
       while frontier.any?
         current = frontier.dequeue
         break if current == goal
+
         graph.neighbors(current).each do |vertex|
           new_cost = cost_so_far[current] + graph.cost(current, vertex)
-          if !cost_so_far.key?(vertex) || new_cost < cost_so_far[vertex]
-            cost_so_far[vertex] = new_cost
-            priority = new_cost + heuristic.call(vertex, goal)
-            frontier.enqueue vertex, priority
-            came_from[vertex] = current
-          end
+          next unless !cost_so_far.key?(vertex) || new_cost < cost_so_far[vertex]
+
+          cost_so_far[vertex] = new_cost
+          priority = new_cost + heuristic.call(vertex, goal)
+          frontier.enqueue vertex, priority
+          came_from[vertex] = current
         end
       end
 

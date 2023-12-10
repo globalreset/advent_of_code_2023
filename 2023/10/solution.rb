@@ -2,7 +2,6 @@
 
 module Year2023
   class Day10 < Solution
-    require 'matrix'
     def getLoop
       y = data.find_index do |row|
         row.index('S')
