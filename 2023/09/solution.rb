@@ -15,5 +15,6 @@ module Year2023
     def part_2
       data.map(&:split).map { |a| a.map(&:to_i) }.map { |a| getNext(a.reverse) }.sum
     end
+
   end
 end
