@@ -6,46 +6,33 @@ module Year2023
     # recurse down if '#' and count for this group is correct
     # recurse down if '.', breaking current group if applicable
     # explore both paths above if '?'
-    def find_groups(pattern, i, groups, j, curr)
-      key = [pattern, i, groups, j, curr]
+    def find_groups(pattern, groups, curr=0)
+      key = [pattern, groups, curr]
       return $cache[key] if($cache.key?(key))
 
-      if(i==pattern.size)
-         $cache[key] = ((j==(groups.size-1) && groups[j]==curr) || (j==groups.size && curr==0)) ? 1 : 0
-         return $cache[key]
-      end
-
-      room_to_grow = j<groups.size && groups[j]>curr
-      group_valid = j<groups.size && groups[j]==curr
+      room_to_grow = (!groups.empty? && groups.first>curr)
+      group_valid = (!groups.empty? && groups.first==curr)
 
       found = 0
-      case(pattern[i])
-      when '#'
-        # always continue counting current group
-        # unless we exhausted our groups
-        if(room_to_grow)
-          found += find_groups(pattern, i+1, groups, j, curr+1)
+      if(pattern.empty?)
+        # end of pattern is end of search
+        # but success means we either got here with the right group count
+        # or we counted all the groups successfully before we got here
+        return ((groups.empty? &&  curr==0) || (groups.size==1 && groups.first==curr)) ? 1 : 0
+      else
+        if([?#,??].include?(pattern.first) && room_to_grow)
+          # always continue counting current group
+          # unless we exhausted our groups
+          found += find_groups(pattern[1..], groups, curr+1)
         end
-      when '.'
-        # continue not counting group
-        if(curr==0)
-          found += find_groups(pattern, i+1, groups, j, 0)
-        # break current group if it's correct, otherwise abort path
-        elsif(group_valid)
-          found += find_groups(pattern, i+1, groups, j+1, 0)
-        end
-      when '?'
-        # try always continue counting current group
-        # unless we exhausted our groups
-        if(room_to_grow)
-          found += find_groups(pattern, i+1, groups, j, curr+1)
-        end
-        # try to continue not counting group
-        if(curr==0)
-          found += find_groups(pattern, i+1, groups, j, 0)
-        # break current group if it's correct
-        elsif(group_valid)
-          found += find_groups(pattern, i+1, groups, j+1, 0)
+        if([?.,??].include?(pattern.first))
+          # continue not counting group
+          if(curr==0)
+            found += find_groups(pattern[1..], groups, 0)
+          # break current group if it's correct, otherwise abort path
+          elsif(group_valid)
+            found += find_groups(pattern[1..], groups[1..], 0)
+          end
         end
       end
 
@@ -53,31 +40,24 @@ module Year2023
       return found
     end
 
-    $tdata = [
-      "???.### 1,1,3",
-      ".??..??...?##. 1,1,3",
-      "?#?#?#?#?#?#?#? 1,3,1,6",
-      "????.#...#... 4,1,1",
-      "????.######..#####. 1,6,5",
-      "?###???????? 3,2,1"
-    ]
-
     def part_1
       data.sum { |line|
         pattern,groups = line.split
-        groups = groups.split(",").map(&:to_i)
-        find_groups(pattern, 0, groups, 0, 0)
+        groups = groups.split(',').map(&:to_i)
+
+        find_groups(pattern.chars, groups)
       }
     end
 
-    # doesn't work
     def part_2
       data.sum { |line|
         pattern,groups = line.split
-        pattern = "#{pattern}?"*5
-        groups = groups.split(",").map(&:to_i)
+        groups = groups.split(',').map(&:to_i)
+
+        pattern = ([pattern]*5).join('?')
         groups = groups*5
-        find_groups(pattern, 0, groups, 0, 0)
+
+        find_groups(pattern.chars, groups)
       }
     end
 
