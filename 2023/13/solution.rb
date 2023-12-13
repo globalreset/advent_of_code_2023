@@ -9,8 +9,7 @@ module Year2023
         space_on_left = [h, space_on_right-1].min
         left = (h-space_on_left)..(h)
         right = (h+1)..(h+space_on_right)
-        pairs_xored = tile[left].zip(tile[right].reverse).map { _1 ^ _2}.sum
-        pairs_xored.to_s(2).count('1') == allowed
+        tile[left].zip(tile[right].reverse).sum { Util.hamming_distance(_1,_2) } == allowed
       }
     end
 
