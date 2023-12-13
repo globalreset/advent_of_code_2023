@@ -10,7 +10,7 @@ module Year2023
         left = (h-space_on_left)..(h)
         right = (h+1)..(h+space_on_right)
         pairs_xored = tile[left].zip(tile[right].reverse).map { _1 ^ _2}.sum
-        pairs_xored.to_s(2).chars.map(&:to_i).sum==allowed
+        pairs_xored.to_s(2).count('1') == allowed
       }
     end
 
