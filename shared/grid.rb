@@ -69,7 +69,7 @@ class WalledGrid
   end
 end
 
-class WalledGridWithWeights < Grid
+class WalledGridWithWeights < WalledGrid
   def initialize(width, height, walls = nil)
     super(width, height, walls)
     @weights = Hash.new(1)
