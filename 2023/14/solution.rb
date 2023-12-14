@@ -19,6 +19,14 @@ module Year2023
       platform.transpose.map(&:reverse)
     end
 
+    def cycle(plat)
+      n = roll_north(plat)
+      w = roll_north(rotate_clockwise(n))
+      s = roll_north(rotate_clockwise(w))
+      e = roll_north(rotate_clockwise(s))
+      rotate_clockwise(e)
+    end
+
     def part_1
       plat = data.map(&:chars)
 
@@ -30,15 +38,20 @@ module Year2023
     def part_2
       plat = data.map(&:chars)
 
-      1000.times { |i|
-        n = roll_north(plat)
-        w = roll_north(rotate_clockwise(n))
-        s = roll_north(rotate_clockwise(w))
-        e = roll_north(rotate_clockwise(s))
-        plat = rotate_clockwise(e)
-      }
+      # dropped over 10 seconds off my routine by adding this cache. It was added after
+      # I submitted my answer, but wanted to make sure I understood methods that used
+      # the cycle count. Basically record all the states and the cycle count they
+      # were executed on, then find the number of steps between a repeat. The remainder
+      # of those cycles into 1000 gives you the lookup for the final state.
+      cache = {}
+      cycle_end = (0..).find { |i|
+        cache[plat] = i
+        plat = cycle(plat)
+        cache.key?(plat)
+      } + 1 # plus 1 because it would've been recorded on the next step
+      remainder = (1000 - cycle_end) % (cycle_end - cache[plat])
 
-      plat.reverse.map.with_index { |row, i| row.join.scan(/O/).size*(i+1) }.sum
+      cache.key(cache[plat] + remainder).reverse.map.with_index { |row, i| row.join.scan(/O/).size*(i+1) }.sum
     end
 
   end
