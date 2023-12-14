@@ -32,7 +32,7 @@ module Year2023
 
       roll_north(plat)
 
-      plat.reverse.map.with_index { |row, i| row.join.scan(/O/).size*(i+1) }.sum
+      plat.reverse.map.with_index { |row, i| row.count(?O)*(i+1) }.sum
     end
 
     def part_2
@@ -51,7 +51,7 @@ module Year2023
       } + 1 # plus 1 because it would've been recorded on the next step
       remainder = (1000 - cycle_end) % (cycle_end - cache[plat])
 
-      cache.key(cache[plat] + remainder).reverse.map.with_index { |row, i| row.join.scan(/O/).size*(i+1) }.sum
+      cache.key(cache[plat] + remainder).reverse.map.with_index { |row, i| row.count(?O)*(i+1) }.sum
     end
 
   end
