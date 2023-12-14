@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 module Year2023
   class Day14 < Solution
+
     def roll_north(platform)
       platform.transpose.map { |row|
         Util.get_indices(row, ?O).each { |i|
@@ -30,7 +31,7 @@ module Year2023
     def part_1
       plat = data.map(&:chars)
 
-      roll_north(plat)
+      plat = roll_north(plat)
 
       plat.reverse.map.with_index { |row, i| row.count(?O)*(i+1) }.sum
     end
