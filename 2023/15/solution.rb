@@ -14,17 +14,13 @@ module Year2023
       data.split(",").each { |op|
         if(op =~ /(\w+)(=|-)(\d?)/)
           h = local_hash(Regexp.last_match(1))
-          box[h] ||= []
+          box[h] ||= {}
+          # Ruby hashtables preserve insertion order
           case(Regexp.last_match(2))
           when ?=
-            i = box[h].find_index { _1[0]==Regexp.last_match(1) }
-            if(i)
-              box[h][i][1] = Regexp.last_match(3)
-            else
-              box[h] << [Regexp.last_match(1), Regexp.last_match(3)]
-            end
+            box[h][Regexp.last_match(1)] = Regexp.last_match(3)
           when ?-
-            box[h].delete_if { _1[0]==Regexp.last_match(1) }
+            box[h].delete(Regexp.last_match(1))
           end
         end
       }
