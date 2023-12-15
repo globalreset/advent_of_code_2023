@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 module Year2023
   class Day14 < Solution
-
     def roll_north(platform)
       platform.transpose.map { |row|
         Util.get_indices(row, ?O).each { |i|
