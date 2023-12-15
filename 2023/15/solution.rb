@@ -26,15 +26,11 @@ module Year2023
           when ?-
             box[h].delete_if { _1[0]==Regexp.last_match(1) }
           end
-          h
         end
       }
       box.keys.sum { |k|
-        if(box[k] && box[k].size>0)
-          (k.to_i+1) * (box[k].map.with_index { |l, idx| (idx+1)*(l[1].to_i) }.sum)
-        else
-          0
-        end
+        (box[k] && box[k].size>0) ?
+          (k.to_i+1) * (box[k].map.with_index { |l, idx| (idx+1)*(l[1].to_i) }.sum) : 0
       }
     end
 
