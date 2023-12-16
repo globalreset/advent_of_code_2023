@@ -54,5 +54,27 @@ module Year2023
       cache.key(cache[plat] + remainder).reverse.map.with_index { |row, i| row.count(?O)*(i+1) }.sum
     end
 
+    # my original was faster this time, but saving this in case there's a similar cycle
+    # count problem in the future where memory is more of a constraint
+    def part_2_floyd # floyd's tortoise and hare
+      plat1 = data.map(&:chars)
+      plat2 = data.map(&:chars)
+
+      cycles = (1..).find {
+        plat1 = cycle(plat1)
+        plat2 = cycle(cycle(plat2))
+        plat1 == plat2
+      }
+      cycle_len = (1..).find {
+         plat1 = cycle(plat1)
+         plat1 == plat2
+      }
+     ((1_000_000_000 - cycles) % (cycle_len)).times {
+       plat1 = cycle(plat1)
+     }
+
+      plat1.reverse.map.with_index { |row, i| row.count(?O)*(i+1) }.sum
+    end
+
   end
 end
