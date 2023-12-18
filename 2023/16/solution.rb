@@ -12,6 +12,15 @@ module Year2023
         if(!visited.include?(b))
           visited << b
           energized << b.pos if(xR.include?(b.pos[0]) && yR.include?(b.pos[1]))
+          #if(data[b.pos[0]][b.pos[1]]==?.)
+          #  case(b.vec)
+          #  when [0,1] then data[b.pos[0]][b.pos[1]] = ?v
+          #  when [0,-1] then data[b.pos[0]][b.pos[1]] = ?^
+          #  when [1,0] then data[b.pos[0]][b.pos[1]] = ?>
+          #  when [-1,0] then data[b.pos[0]][b.pos[1]] = ?<
+          #  end
+          #end
+
           newPos = b.pos.zip(b.vec).map(&:sum)
           if(xR.include?(newPos[0]) && yR.include?(newPos[1]))
             case([b.vec[0].abs, data[newPos[1]][newPos[0]]])
@@ -27,6 +36,8 @@ module Year2023
             end
           end
         end
+        #puts "\e[H\e[2J"
+        #data[0..80].each { puts _1.join }
       end
       energized.size
     end
