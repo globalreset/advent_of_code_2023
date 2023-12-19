@@ -55,5 +55,30 @@ module Util
       end
       neighbors
     end
+
+    # area inside a polygon given by the following product/sum of all vertices:
+    # A = 1/2*(x0*y1 - x1*y0 + .... x999*y1000 - x1000*y999)
+    # https://en.wikipedia.org/wiki/Shoelace_formula
+    def shoelace_formula(vertices)
+      sum1 = 0
+      sum2 = 0
+
+      vertices.each_with_index do |(x, y), i|
+        next_vertex = vertices[(i + 1) % vertices.size]
+        sum1 += x * next_vertex[1]
+        sum2 += y * next_vertex[0]
+      end
+
+      (sum1 - sum2).abs / 2.0
+    end
+
+    # gives number of integer points within a simple polygon.
+    # Normally gives area based on interior integer points and
+    # boundary points, but can solve for interior points if
+    # we have the other 2 arguments
+    def picks_theorem_interior(area, boundary_length)
+      #A = i + b/2 - 1
+      area - boundary_length/2.0 + 1
+    end
   end
 end
