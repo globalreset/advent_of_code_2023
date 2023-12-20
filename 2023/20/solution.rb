@@ -20,7 +20,7 @@ module Year2023
       circuit.each { |k,v|
         next if(k==:broadcaster)
         v[:inputs] = {}
-        all_inputs[k].each{ v.inputs[_1] = 0}
+        all_inputs[k].each{ v[:inputs][_1] = 0}
       }
     end
 
@@ -60,7 +60,8 @@ module Year2023
       cycles = {}
       (1..).find { |i|
         pulse_cnt = push_button(circuit, {})
-        # record the cycle that each conjunction input receives a high pulse
+        # record the cycle that each conjunction input flop receives a low pulse,
+        # since the flops can only toggle their state on low pulses
         watch.each { |k,v| cycles[k] = i if(cycles[k]==nil && pulse_cnt[k][0]>0) }
         # quit when we have found a high pulse from every conjunction input
         watch.size == cycles.size
