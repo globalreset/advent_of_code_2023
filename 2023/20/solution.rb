@@ -4,7 +4,7 @@ module Year2023
 
     def get_circuit(input)
       all_inputs = {}
-      circuit = data.map { |line|
+      circuit = input.map { |line|
         if(line =~ /(%|&)(\w+) -> ([\w,\s]+)/)
           n = Regexp.last_match(2).to_sym
           h = {:type => Regexp.last_match(1).to_sym, :state => 0, :outputs => Regexp.last_match(3).split(", ").map(&:to_sym)}
