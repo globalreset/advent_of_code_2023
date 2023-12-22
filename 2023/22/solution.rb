@@ -59,12 +59,11 @@ module Year2023
       bricks.sum { |b|
         felled = [b].to_set
         q = above[b].to_a
-        until q.empty?
-          t = q.shift
-          if(below[t].all? { felled.include?(_1) })
-            felled << t
-            q += above[t].to_a
-          end
+        while (t = q.shift)
+          next if felled.include?(t)
+          next unless (below[t].all? { felled.include?(_1) })
+          felled << t
+          q += above[t].to_a
         end
         felled.size - 1
       }
